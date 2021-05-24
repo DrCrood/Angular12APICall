@@ -1,0 +1,84 @@
+<div>
+  <h1>
+  Product list
+</h1>
+</div>
+
+<div>
+  <button mat-button mat-button color="primary" (click) = "GetProductList()" > Get Products list</button>
+</div>
+
+<div>
+  <button mat-button mat-button color="primary" (click) = "AddNewProduct()" > Add a new product</button>
+  <button mat-button mat-button color="primary" (click) = "UpdateProduct()" > Update product</button>
+
+<table cellspacing="10">
+  <tr>
+    <th>Product ID</th>
+    <th>Name</th>
+    <th>Inventory</th>
+    <th>Price</th>
+  </tr>
+  <tr>
+  <td>
+    <mat-form-field>
+      <input matInput name="newid" type="number"
+      [(ngModel)]="NewProductId" (ngModelChange)="CheckIDNumber()">
+  </mat-form-field> 
+  </td>
+  <td>
+    <mat-form-field>
+      <input matInput name="newname" type="text"
+      [(ngModel)]="NewProductName">
+  </mat-form-field> 
+  </td>
+  <td>
+    <mat-form-field>
+      <input matInput name="newinventory" type="number"
+      [(ngModel)]="NewProductInventory">
+  </mat-form-field> 
+  </td>
+  <td>
+    <mat-form-field>
+      <input matInput name="newprice" type="number"
+      [(ngModel)]="NewProductPrice">
+  </mat-form-field> 
+  </td>
+  </tr>
+</table>
+
+</div>
+
+<table mat-table [dataSource]="dataSource">
+  <ng-container matColumnDef="Product ID">
+    <th mat-header-cell *matHeaderCellDef> Product ID </th>
+    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Inventory">
+    <th mat-header-cell *matHeaderCellDef> Inventory Number </th>
+    <td mat-cell *matCellDef="let element"> {{element.inventory}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Unit Price">
+    <th mat-header-cell *matHeaderCellDef> Unit Price </th>
+    <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Action">
+    <th mat-header-cell *matHeaderCellDef> Action </th>
+    <td mat-cell *matCellDef="let element"> <button mat-button (click)='DeleteProductById(element.id)'>delete</button> </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumnNames"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumnNames;"></tr>
+</table>
+
+
+
+
