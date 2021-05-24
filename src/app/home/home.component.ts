@@ -1,16 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observer, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { HttpClient, HttpResponse} from '@angular/common/http';
+import { HttpResponse} from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
-
-export interface Product
-{
-  id: number;
-  name: string;
-  inventory: number;
-  price: number;
-}
+import { Product, ProductService} from '../services/Product.service';
 
 @Component({
   selector: 'app-home',
@@ -28,7 +21,7 @@ export class HomeComponent implements OnInit {
   NewProductInventory: number = 0;
   NewProductPrice: number = 0;
 
-   myObserver = {
+   getObserver = {
     next: (data) => {
       this.products = data.body;
       this.dataSource.data = this.products;
@@ -39,19 +32,14 @@ export class HomeComponent implements OnInit {
 
   displayedColumnNames: string[] = ['Product ID','Name','Inventory','Unit Price', 'Action'];
 
-  constructor(private httpClient: HttpClient ) { }
+  constructor( private productService: ProductService ) { }
 
   ngOnInit() {
   }
 
-  getProductList_REST() {
-    return this.httpClient.get<Product>( this.baseURL + "product", {observe : 'response'});
-  }
-
-
   public GetProductList()
   {
-    this.getProductList_REST().subscribe(this.myObserver);
+    this.productService.GetProductList().subscribe(this.getObserver);
   }
 
   public DeleteProductById(id:number)
@@ -79,12 +67,11 @@ export class HomeComponent implements OnInit {
       complete: () => console.log('Observer got a complete notification'),
     } as Observer<any>;
 
-    const url = this.baseURL + "product/" + id;
-    this.httpClient.delete(url, {observe : 'response'}).subscribe(deleteObserver);
+    this.productService.DeleteProductById(id).subscribe(deleteObserver);
 
   }
 
-  public AddNewProduct()
+  public PostNewProduct()
   {
 
     if(this.NewProductId < 1 || this.NewProductName.length < 1 )
@@ -100,7 +87,7 @@ export class HomeComponent implements OnInit {
     let header : any;
     let status : any;
     let error : any;
-    const addObserver = {
+    const postObserver = {
       next: (response : HttpResponse<any>) => {
          header = response.headers;
          status = response.status;
@@ -119,7 +106,7 @@ export class HomeComponent implements OnInit {
     } as Observer<any>;
 
 
-    this.httpClient.post(url, p, {observe: 'response'}).subscribe(addObserver);
+    this.productService.PostProduct(p).subscribe(postObserver);
     
   }
 
@@ -139,8 +126,6 @@ export class HomeComponent implements OnInit {
     {
       return;
     }
-
-    const url = this.baseURL + "product/" + p.id;
 
     let product : any;
     let header : any;
@@ -166,7 +151,7 @@ export class HomeComponent implements OnInit {
     } as Observer<any>;
 
 
-    this.httpClient.put(url, p, {observe: 'response'}).subscribe(updateObserver);
+    this.productService.UpdateProduct( p ).subscribe(updateObserver);
     
   }
 
