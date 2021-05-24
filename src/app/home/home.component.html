@@ -12,40 +12,36 @@
   <button mat-button mat-button color="primary" (click) = "PostNewProduct()" > Add a new product</button>
   <button mat-button mat-button color="primary" (click) = "UpdateProduct()" > Update product</button>
 
-<table cellspacing="10">
-  <tr>
-    <th>Product ID</th>
-    <th>Name</th>
-    <th>Inventory</th>
-    <th>Price</th>
-  </tr>
-  <tr>
-  <td>
+
+  <form [formGroup]="NewProductFormGroup" (ngSubmit)="PostNewProduct()" validate>
     <mat-form-field>
-      <input matInput name="newid" type="number"
-      [(ngModel)]="NewProductId" (ngModelChange)="CheckIDNumber()">
+      <input matInput name="newid" type="number" placeholder="product id" formControlName="ProductId" required
+      matTooltip="new product id">
+      <mat-error *ngIf="NewProductFormGroup.controls.ProductId.invalid">{{getIdErrorMessage()}}</mat-error>
   </mat-form-field> 
-  </td>
-  <td>
+
     <mat-form-field>
-      <input matInput name="newname" type="text"
-      [(ngModel)]="NewProductName">
+      <input matInput name="newname" type="text" placeholder="name" formControlName="ProductName" required
+      matTooltip="new product name">
+      <mat-error *ngIf="NewProductFormGroup.controls.ProductName.invalid">{{getNameErrorMessage()}}</mat-error>
   </mat-form-field> 
-  </td>
-  <td>
+
     <mat-form-field>
-      <input matInput name="newinventory" type="number"
-      [(ngModel)]="NewProductInventory">
+      <input matInput name="newinventory" type="number" placeholder="inventory" formControlName="ProductInventory" required
+      matTooltip="new product inventory number">
+      <mat-error *ngIf="NewProductFormGroup.controls.ProductInventory.invalid">{{getInventoryErrorMessage()}}</mat-error>
   </mat-form-field> 
-  </td>
-  <td>
+
     <mat-form-field>
-      <input matInput name="newprice" type="number"
-      [(ngModel)]="NewProductPrice">
-  </mat-form-field> 
-  </td>
-  </tr>
-</table>
+      <input matInput name="newprice" type="number" placeholder="price" formControlName="ProductPrice" required
+      matTooltip="new product unit price">
+      <mat-error *ngIf="NewProductFormGroup.controls.ProductPrice.invalid">{{getPriceErrorMessage()}}</mat-error>
+  </mat-form-field>
+  </form>
+ 
+
+
+
 
 </div>
 

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observer, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
 import { HttpResponse} from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { Product, ProductService} from '../services/Product.service';
+import { AbstractControl, FormControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -16,12 +16,19 @@ export class HomeComponent implements OnInit {
   baseURL: string = 'https://localhost:5001/api/v1/';
   dataSource = new MatTableDataSource<Product>();
   
-  NewProductId: number = 0;
-  NewProductName: string = '';
-  NewProductInventory: number = 0;
-  NewProductPrice: number = 0;
+  NewProductFormGroup = this.fb.group({
+    ProductId: new FormControl("", [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(1E10),
+      this.IdExistsValidator()
+    ]),
+    ProductName: new FormControl("", [Validators.required, Validators.minLength(2), this.NameValidator()]),
+    ProductInventory: new FormControl("", [Validators.required, Validators.min(0)]),
+    ProductPrice: new FormControl("", [Validators.required, Validators.min(0.01)])
+  });
 
-   getObserver = {
+  getObserver = {
     next: (data) => {
       this.products = data.body;
       this.dataSource.data = this.products;
@@ -32,10 +39,17 @@ export class HomeComponent implements OnInit {
 
   displayedColumnNames: string[] = ['Product ID','Name','Inventory','Unit Price', 'Action'];
 
-  constructor( private productService: ProductService ) { }
+  constructor( private productService: ProductService, private fb: FormBuilder )
+   {
+
+   }
 
   ngOnInit() {
+
+
   }
+
+
 
   public GetProductList()
   {
@@ -73,13 +87,20 @@ export class HomeComponent implements OnInit {
 
   public PostNewProduct()
   {
+    console.warn(this.NewProductFormGroup.value);
 
-    if(this.NewProductId < 1 || this.NewProductName.length < 1 )
+    console.log(this.NewProductFormGroup.errors);
+
+    if( this.NewProductFormGroup.invalid )
     {
       return;
     }
-
-    const p : Product = { id: this.NewProductId, name: this.NewProductName, inventory: this.NewProductInventory, price: this.NewProductPrice};
+    
+    const ID = this.NewProductFormGroup.value.ProductId;
+    const NAME = this.NewProductFormGroup.value.ProductName;
+    const INVENTORY = this.NewProductFormGroup.value.ProductInventory;
+    const PRICE = this.NewProductFormGroup.value.ProductPrice;
+    const p : Product = { id: ID, name: NAME, inventory: INVENTORY, price: PRICE};
 
     const url = this.baseURL + "product/";
 
@@ -114,12 +135,16 @@ export class HomeComponent implements OnInit {
   public UpdateProduct()
   {
 
-    if(this.NewProductId < 1 || this.NewProductName.length < 1 )
+    if( this.NewProductFormGroup.invalid )
     {
       return;
     }
 
-    const p : Product = { id: this.NewProductId, name: this.NewProductName, inventory: this.NewProductInventory, price: this.NewProductPrice};
+    const ID = this.NewProductFormGroup.get("ProductId")?.value;
+    const NAME = this.NewProductFormGroup.get("ProductName")?.value;
+    const INVENTORY = this.NewProductFormGroup.get("ProductInventory")?.value;
+    const PRICE = this.NewProductFormGroup.get("ProductPrice")?.value;
+    const p : Product = { id: ID, name: NAME, inventory: INVENTORY, price: PRICE};
 
     const index = this.products.findIndex( pd => pd.id == p.id);
     if(index < 0)
@@ -155,8 +180,104 @@ export class HomeComponent implements OnInit {
     
   }
 
-  public CheckIDNumber()
+  public IdExistsValidator(): ValidatorFn 
   {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const index = this.products.findIndex(x => x.id == this.NewProductFormGroup.get("ProductId")?.value);
+      return index < 0 ? null : {error: " id exists"}};
+  }
+
+  public NameValidator(): ValidatorFn 
+  {
+    return (control: AbstractControl): ValidationErrors | null => {
+      let name = control.value as string;
+      if( name.match(/^\d/) )
+      {
+        return {error: "Started with number"};
+      } 
+      return null;
+  }
+}
+
+  public getIdErrorMessage()
+  {
+    if(this.NewProductFormGroup.valid)
+    {
+      return ;
+    }
+
+    if(this.NewProductFormGroup.controls.ProductId.hasError('required'))
+    {
+      return "Id required.";
+    }
+
+    if(this.NewProductFormGroup.controls.ProductId.hasError('min'))
+    {
+      return "Must be > 0.";
+    }
+
+    if(this.NewProductFormGroup.controls.ProductId.hasError('max'))
+    {
+      return "Must be < 1E10.";
+    }
+
+    let err = this.NewProductFormGroup.controls.ProductId.errors as ValidationErrors;
+
+     return err["error"];
+
+  }
+
+  public getNameErrorMessage()
+  {
+    if(this.NewProductFormGroup.valid)
+    {
+      return;
+    }
+    if(this.NewProductFormGroup.controls.ProductName.hasError('required'))
+    {
+      return "Name required.";
+    }
+    if(this.NewProductFormGroup.controls.ProductName.hasError('minlength'))
+    {
+      return "length min 2.";
+    }
+
+    return (this.NewProductFormGroup.controls.ProductName.errors as ValidationErrors)["error"];
+  }
+
+  public getInventoryErrorMessage()
+  {
+    if(this.NewProductFormGroup.valid)
+    {
+      return;
+    }
+    if(this.NewProductFormGroup.controls.ProductInventory.hasError('required'))
+    {
+      return "required.";
+    }
+    if(this.NewProductFormGroup.controls.ProductInventory.hasError('min'))
+    {
+      return "min 1";
+    }
+
+    return "error";
+  }
+
+  public getPriceErrorMessage()
+  {
+    if(this.NewProductFormGroup.valid)
+    {
+      return;
+    }
+    if(this.NewProductFormGroup.controls.ProductPrice.hasError('required'))
+    {
+      return "required.";
+    }
+    if(this.NewProductFormGroup.controls.ProductPrice.hasError('min'))
+    {
+      return "min 0.01";
+    }
+    return "error";
 
   }
 
