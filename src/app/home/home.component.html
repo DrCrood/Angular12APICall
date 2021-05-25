@@ -15,65 +15,67 @@
 
   <form [formGroup]="NewProductFormGroup" (ngSubmit)="PostNewProduct()" validate>
     <mat-form-field>
-      <input matInput name="newid" type="number" placeholder="product id" formControlName="ProductId" required
+      <input matInput type="number" placeholder="product id" formControlName="ProductId"
       matTooltip="new product id">
       <mat-error *ngIf="NewProductFormGroup.controls.ProductId.invalid">{{getIdErrorMessage()}}</mat-error>
   </mat-form-field> 
 
     <mat-form-field>
-      <input matInput name="newname" type="text" placeholder="name" formControlName="ProductName" required
+      <input matInput type="text" placeholder="name" formControlName="ProductName"
       matTooltip="new product name">
       <mat-error *ngIf="NewProductFormGroup.controls.ProductName.invalid">{{getNameErrorMessage()}}</mat-error>
   </mat-form-field> 
 
     <mat-form-field>
-      <input matInput name="newinventory" type="number" placeholder="inventory" formControlName="ProductInventory" required
+      <input matInput type="number" placeholder="inventory" formControlName="ProductInventory"
       matTooltip="new product inventory number">
       <mat-error *ngIf="NewProductFormGroup.controls.ProductInventory.invalid">{{getInventoryErrorMessage()}}</mat-error>
   </mat-form-field> 
 
     <mat-form-field>
-      <input matInput name="newprice" type="number" placeholder="price" formControlName="ProductPrice" required
+      <input matInput type="number" placeholder="price" formControlName="ProductPrice"
       matTooltip="new product unit price">
       <mat-error *ngIf="NewProductFormGroup.controls.ProductPrice.invalid">{{getPriceErrorMessage()}}</mat-error>
   </mat-form-field>
-  </form>
- 
-
-
-
-
+  </form> 
 </div>
 
-<table mat-table [dataSource]="dataSource">
-  <ng-container matColumnDef="Product ID">
-    <th mat-header-cell *matHeaderCellDef> Product ID </th>
-    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-  </ng-container>
+<div>
+  <div *ngIf="loading">
+      <mat-spinner></mat-spinner>
+  </div>
 
-  <ng-container matColumnDef="Name">
-    <th mat-header-cell *matHeaderCellDef> Name </th>
-    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-  </ng-container>
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="Product ID">
+      <th mat-header-cell *matHeaderCellDef> Product ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="Name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="Inventory">
+      <th mat-header-cell *matHeaderCellDef> Inventory Number </th>
+      <td mat-cell *matCellDef="let element"> {{element.inventory}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="Unit Price">
+      <th mat-header-cell *matHeaderCellDef> Unit Price </th>
+      <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="Action">
+      <th mat-header-cell *matHeaderCellDef> Action </th>
+      <td mat-cell *matCellDef="let element"> <button mat-button (click)='DeleteProductById(element.id)'>delete</button> </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumnNames"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnNames;"></tr>
+  </table>
+</div>
 
-  <ng-container matColumnDef="Inventory">
-    <th mat-header-cell *matHeaderCellDef> Inventory Number </th>
-    <td mat-cell *matCellDef="let element"> {{element.inventory}} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="Unit Price">
-    <th mat-header-cell *matHeaderCellDef> Unit Price </th>
-    <td mat-cell *matCellDef="let element"> {{element.price}} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="Action">
-    <th mat-header-cell *matHeaderCellDef> Action </th>
-    <td mat-cell *matCellDef="let element"> <button mat-button (click)='DeleteProductById(element.id)'>delete</button> </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumnNames"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumnNames;"></tr>
-</table>
 
 
 

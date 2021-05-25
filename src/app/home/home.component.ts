@@ -12,6 +12,7 @@ import { AbstractControl, FormControl, FormBuilder, ValidationErrors, ValidatorF
 })
 export class HomeComponent implements OnInit {
 
+  loading: boolean = false;
   products: Product[] = [];
   baseURL: string = 'https://localhost:5001/api/v1/';
   dataSource = new MatTableDataSource<Product>();
@@ -32,9 +33,16 @@ export class HomeComponent implements OnInit {
     next: (data) => {
       this.products = data.body;
       this.dataSource.data = this.products;
+      this.loading = false;
     },
-    error: (err: Error) => console.error('Observer got an error: ' + err),
-    complete: () => console.log('Observer got a complete notification'),
+    error: (err: Error) => {
+      console.error('Observer got an error: ' + err);
+      this.loading = false;
+    },
+    complete: () => {
+      console.log('Observer got a complete notification');
+      this.loading = false;
+    },
   } as Observer<any>;
 
   displayedColumnNames: string[] = ['Product ID','Name','Inventory','Unit Price', 'Action'];
@@ -53,7 +61,9 @@ export class HomeComponent implements OnInit {
 
   public GetProductList()
   {
-    this.productService.GetProductList().subscribe(this.getObserver);
+    this.loading = true;
+    //set some delay to simulate slow processing
+    setTimeout(() => { this.productService.GetProductList().subscribe(this.getObserver); }, 1000);    
   }
 
   public DeleteProductById(id:number)
