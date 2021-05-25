@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observer, throwError } from 'rxjs';
 import { HttpResponse} from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Product, ProductService} from '../services/Product.service';
 import { AbstractControl, FormControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { UpdateProductDialogComponent} from '../UpdateProductDialog/UpdateProductDialog.component';
 
 @Component({
   selector: 'app-home',
@@ -45,9 +47,9 @@ export class HomeComponent implements OnInit {
     },
   } as Observer<any>;
 
-  displayedColumnNames: string[] = ['Product ID','Name','Inventory','Unit Price', 'Action'];
+  displayedColumnNames: string[] = ['Product ID','Name','Inventory','Unit Price', 'Update', 'Delete'];
 
-  constructor( private productService: ProductService, private fb: FormBuilder )
+  constructor( private productService: ProductService, private fb: FormBuilder, private dialog: MatDialog )
    {
 
    }
@@ -142,27 +144,31 @@ export class HomeComponent implements OnInit {
   }
 
 
-  public UpdateProduct()
+  public UpdateProduct(product: Product)
   {
-
-    if( this.NewProductFormGroup.invalid )
+    if( product == undefined || product == null )
     {
       return;
     }
 
-    const ID = this.NewProductFormGroup.get("ProductId")?.value;
-    const NAME = this.NewProductFormGroup.get("ProductName")?.value;
-    const INVENTORY = this.NewProductFormGroup.get("ProductInventory")?.value;
-    const PRICE = this.NewProductFormGroup.get("ProductPrice")?.value;
-    const p : Product = { id: ID, name: NAME, inventory: INVENTORY, price: PRICE};
+    const dialogRef = this.dialog.open(UpdateProductDialogComponent, {
+      panelClass: 'dialogpanel',
+      width: '280px',
+      height: '340px',
+      backdropClass: 'winbackdropbg',
+      data: { item: product,
+              list: this.products
+            }
+    });
 
-    const index = this.products.findIndex( pd => pd.id == p.id);
-    if(index < 0)
-    {
-      return;
-    }
+    dialogRef.afterClosed().subscribe( (result: Product) => {
+      if(result == undefined || result == null){ return;}
+      this.UpdateProductAPI(result);
+    });    
+  }
 
-    let product : any;
+  public UpdateProductAPI(product : Product)
+  {
     let header : any;
     let status : any;
     let error : any;
@@ -185,9 +191,7 @@ export class HomeComponent implements OnInit {
       complete: () => console.log('Observer got a complete notification'),
     } as Observer<any>;
 
-
-    this.productService.UpdateProduct( p ).subscribe(updateObserver);
-    
+    this.productService.UpdateProduct( product ).subscribe(updateObserver);
   }
 
   public IdExistsValidator(): ValidatorFn 

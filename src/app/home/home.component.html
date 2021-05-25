@@ -9,11 +9,9 @@
 </div>
 
 <div>
-  <button mat-button mat-button color="primary" (click) = "PostNewProduct()" > Add a new product</button>
-  <button mat-button mat-button color="primary" (click) = "UpdateProduct()" > Update product</button>
-
-
   <form [formGroup]="NewProductFormGroup" (ngSubmit)="PostNewProduct()" validate>
+    <button mat-button mat-button color="primary" > Add</button>
+
     <mat-form-field>
       <input matInput type="number" placeholder="product id" formControlName="ProductId"
       matTooltip="new product id">
@@ -65,8 +63,13 @@
       <th mat-header-cell *matHeaderCellDef> Unit Price </th>
       <td mat-cell *matCellDef="let element"> {{element.price}} </td>
     </ng-container>
+
+    <ng-container matColumnDef="Update">
+      <th mat-header-cell *matHeaderCellDef> Action </th>
+      <td mat-cell *matCellDef="let element"> <button mat-button (click)="UpdateProduct(element)">update</button> </td>
+    </ng-container>
   
-    <ng-container matColumnDef="Action">
+    <ng-container matColumnDef="Delete">
       <th mat-header-cell *matHeaderCellDef> Action </th>
       <td mat-cell *matCellDef="let element"> <button mat-button (click)='DeleteProductById(element.id)'>delete</button> </td>
     </ng-container>
