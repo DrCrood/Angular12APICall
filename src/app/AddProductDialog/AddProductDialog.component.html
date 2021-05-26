@@ -1,0 +1,32 @@
+<div><h1>{{title}}</h1></div>
+
+<div>
+  <form [formGroup]="ProductFormGroup" validate>
+    <mat-form-field>
+      <input matInput type="number" placeholder="product id" formControlName="ProductId"
+      matTooltip="product id">
+      <mat-error *ngIf="ProductFormGroup.controls.ProductId.invalid">{{getIdErrorMessage()}}</mat-error>
+  </mat-form-field> 
+
+    <mat-form-field>
+      <input matInput type="text" placeholder="name" formControlName="ProductName"
+      matTooltip="new product name">
+      <mat-error *ngIf="ProductFormGroup.controls.ProductName.invalid">{{getNameErrorMessage()}}</mat-error>
+  </mat-form-field> 
+
+    <mat-form-field>
+      <input matInput type="number" placeholder="inventory" formControlName="ProductInventory"
+      matTooltip="new product inventory number">
+      <mat-error *ngIf="ProductFormGroup.controls.ProductInventory.invalid">{{getInventoryErrorMessage()}}</mat-error>
+  </mat-form-field> 
+
+    <mat-form-field>
+      <input matInput type="number" placeholder="price" formControlName="ProductPrice"
+      matTooltip="new product unit price">
+      <mat-error *ngIf="ProductFormGroup.controls.ProductPrice.invalid">{{getPriceErrorMessage()}}</mat-error>
+  </mat-form-field>
+  <div>
+    <button mat-button mat-button color="primary" mat-button [mat-dialog-close]="GetUpdatedProduct()" > Submit</button>
+  </div>
+  </form> 
+</div>
