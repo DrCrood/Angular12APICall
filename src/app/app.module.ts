@@ -7,6 +7,9 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { PageNotFoundComponent } from './PageNotFound/PageNotFound.component';
+import { UpdateProductDialogComponent } from './UpdateProductDialog/UpdateProductDialog.component';
+import { AddProductDialogComponent } from './AddProductDialog/AddProductDialog.component';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule,} from '@angular/material/button';
@@ -20,15 +23,16 @@ import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule, } from '@angular/material/card';
 import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { UpdateProductDialogComponent } from './UpdateProductDialog/UpdateProductDialog.component';
+
 
 @NgModule({
-  declarations: [				
+  declarations: [					
     AppComponent,
       HomeComponent,
       AboutComponent,
       PageNotFoundComponent,
-      UpdateProductDialogComponent
+      UpdateProductDialogComponent,
+      AddProductDialogComponent
    ],
   imports: [
     BrowserModule,

@@ -24,7 +24,8 @@
       matTooltip="new product unit price">
       <mat-error *ngIf="ProductFormGroup.controls.ProductPrice.invalid">{{getPriceErrorMessage()}}</mat-error>
   </mat-form-field>
-
-  <button mat-button mat-button color="primary" mat-button [mat-dialog-close]="GetUpdatedProduct()" > Submit</button>
+  <div>
+    <button mat-button mat-button color="primary" mat-button [mat-dialog-close]="GetUpdatedProduct()" > Submit</button>
+  </div>
   </form> 
 </div>

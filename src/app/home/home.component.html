@@ -8,39 +8,16 @@
   <button mat-button mat-button color="primary" (click) = "GetProductList()" > Get Products list</button>
 </div>
 
-<div>
-  <form [formGroup]="NewProductFormGroup" (ngSubmit)="PostNewProduct()" validate>
-    <button mat-button mat-button color="primary" > Add</button>
-
-    <mat-form-field>
-      <input matInput type="number" placeholder="product id" formControlName="ProductId"
-      matTooltip="new product id">
-      <mat-error *ngIf="NewProductFormGroup.controls.ProductId.invalid">{{getIdErrorMessage()}}</mat-error>
-  </mat-form-field> 
-
-    <mat-form-field>
-      <input matInput type="text" placeholder="name" formControlName="ProductName"
-      matTooltip="new product name">
-      <mat-error *ngIf="NewProductFormGroup.controls.ProductName.invalid">{{getNameErrorMessage()}}</mat-error>
-  </mat-form-field> 
-
-    <mat-form-field>
-      <input matInput type="number" placeholder="inventory" formControlName="ProductInventory"
-      matTooltip="new product inventory number">
-      <mat-error *ngIf="NewProductFormGroup.controls.ProductInventory.invalid">{{getInventoryErrorMessage()}}</mat-error>
-  </mat-form-field> 
-
-    <mat-form-field>
-      <input matInput type="number" placeholder="price" formControlName="ProductPrice"
-      matTooltip="new product unit price">
-      <mat-error *ngIf="NewProductFormGroup.controls.ProductPrice.invalid">{{getPriceErrorMessage()}}</mat-error>
-  </mat-form-field>
-  </form> 
-</div>
+<button mat-button mat-button color="primary" (click)="AddNewProduct()" > Add New Product</button>
 
 <div>
   <div *ngIf="loading">
       <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="httpError" class="errorMessage">
+    <h3>{{error.name}}</h3>
+    <h4>{{error.message}}</h4>
   </div>
 
   <table mat-table [dataSource]="dataSource">

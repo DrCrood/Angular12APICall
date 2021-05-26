@@ -2,3 +2,19 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.dialogpanel .mat-dialog-container{ /* used for dialog style, need to be in global css file  */
+    background-color: rgb(216, 244, 245);
+    border-radius: 10px;
+    padding: 0px;
+    text-align: center;
+  }
+  
+  .normalbackdropbg{
+    background-color: transparent;
+  }
+  
+  .winbackdropbg{
+    background-color: rgba(0, 206, 45, 0.1);
+  }
