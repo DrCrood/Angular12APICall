@@ -1,6 +1,7 @@
 # Angular12APICall
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.1.
+This project demonstrate how to consume REST API with Angular HttpClient. 
 
 ## Development server
 
