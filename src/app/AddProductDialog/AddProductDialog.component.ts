@@ -39,14 +39,17 @@ export class AddProductDialogComponent implements OnInit {
   });
 
 
-  public GetUpdatedProduct() : Product
+  public TrySubmitProduct()
   {
     this.product.id = this.ProductFormGroup.controls.ProductId.value;
     this.product.name = this.ProductFormGroup.controls.ProductName.value;
     this.product.inventory = this.ProductFormGroup.controls.ProductInventory.value;
     this.product.price = this.ProductFormGroup.controls.ProductPrice.value;
 
-    return this.product;
+    if(this.ProductFormGroup.valid)
+    {
+      this.dialogRef.close(this.product);
+    }
   }
 
   public IdExistsValidator(): ValidatorFn 

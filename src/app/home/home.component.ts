@@ -97,8 +97,8 @@ export class HomeComponent implements OnInit {
       data: this.products
     });
 
-    dialogRef.afterClosed().subscribe( (result: Product) => {
-      if(result == undefined || result == null){ return;}
+    dialogRef.afterClosed().subscribe( (result: any) => {
+      if(result == undefined || result == null || result == ""){ return;}
       this.PostNewProduct(result);
     }); 
   }

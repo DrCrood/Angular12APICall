@@ -26,7 +26,8 @@
       <mat-error *ngIf="ProductFormGroup.controls.ProductPrice.invalid">{{getPriceErrorMessage()}}</mat-error>
   </mat-form-field>
   <div>
-    <button mat-button mat-button color="primary" mat-button [mat-dialog-close]="GetUpdatedProduct()" > Submit</button>
+    <button mat-button mat-button color="primary" mat-button (click)="TrySubmitProduct()" > Submit</button>
+    <button mat-button mat-button color="primary" mat-button mat-dialog-close > Cancel</button>
   </div>
   </form> 
 </div>
